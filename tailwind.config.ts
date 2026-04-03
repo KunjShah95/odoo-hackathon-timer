@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -100,11 +101,6 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-10px)" },
         },
-        "digit-tick": {
-          "0%": { transform: "scaleY(0.85)", opacity: "0.6" },
-          "50%": { transform: "scaleY(1.02)" },
-          "100%": { transform: "scaleY(1)", opacity: "1" },
-        },
         "shimmer": {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
@@ -120,10 +116,9 @@ export default {
         "slide-in-left": "slide-in-left 0.6s ease-out forwards",
         "slide-in-right": "slide-in-right 0.6s ease-out forwards",
         "float": "float 3s ease-in-out infinite",
-        "digit-tick": "digit-tick 0.3s ease-out",
         "shimmer": "shimmer 2s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

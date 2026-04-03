@@ -54,7 +54,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden h-full;
     font-family: 'Inter', system-ui, sans-serif;
   }
 }
@@ -62,43 +62,18 @@
 @layer components {
   .countdown-digit {
     @apply bg-card border border-border rounded-lg flex flex-col items-center justify-center;
-    box-shadow: 0 0 30px hsl(var(--countdown-glow) / 0.15),
-                0 0 60px hsl(var(--countdown-glow) / 0.06);
+    box-shadow: 0 0 30px hsl(var(--countdown-glow) / 0.14), 0 0 60px hsl(var(--countdown-glow) / 0.05);
   }
 
   .glow-text {
-    text-shadow: 0 0 20px hsl(var(--countdown-glow) / 0.5),
-                 0 0 40px hsl(var(--countdown-glow) / 0.25);
+    text-shadow: 0 0 18px hsl(var(--countdown-glow) / 0.32), 0 0 34px hsl(var(--countdown-glow) / 0.16);
   }
 
-  .pulse-dot {
-    animation: pulse-glow 2s ease-in-out infinite;
-  }
-
-  /* Breathing animation for last 10 minutes */
-  .breathing {
-    animation: breathing 2s ease-in-out infinite;
-  }
-
-  .breathing .countdown-digit {
-    animation: breathing-glow 2s ease-in-out infinite;
-  }
-
-  /* Bubble styles */
-  .bubble {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, hsl(var(--primary) / 0.15), hsl(var(--countdown-accent) / 0.08));
-    border: 1px solid hsl(var(--primary) / 0.1);
-    animation: bubble-rise linear infinite;
-    pointer-events: none;
+  .heartbeat {
+    animation: heartbeat 1.8s ease-in-out infinite;
   }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
 
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(20px); }
@@ -109,35 +84,11 @@
   animation: fade-in-up 0.6s ease-out forwards;
 }
 
-@keyframes breathing {
+@keyframes heartbeat {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  20% { transform: scale(1.012); }
+  40% { transform: scale(1.028); }
+  60% { transform: scale(1.012); }
+  80% { transform: scale(1.02); }
 }
 
-@keyframes breathing-glow {
-  0%, 100% {
-    box-shadow: 0 0 30px hsl(0 84% 60% / 0.2), 0 0 60px hsl(0 84% 60% / 0.1);
-    border-color: hsl(0 84% 60% / 0.4);
-  }
-  50% {
-    box-shadow: 0 0 50px hsl(0 84% 60% / 0.4), 0 0 100px hsl(0 84% 60% / 0.2);
-    border-color: hsl(0 84% 60% / 0.7);
-  }
-}
-
-@keyframes bubble-rise {
-  0% {
-    transform: translateY(100vh) scale(0.3);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translateY(-10vh) scale(1);
-    opacity: 0;
-  }
-}

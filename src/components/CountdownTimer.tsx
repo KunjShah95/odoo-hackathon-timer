@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface CountdownTimerProps {
   startTime: Date;
   endTime: Date;
-  onReset: () => void;
+  onReset?: () => void;
+  isPaused?: boolean;
 }
 
 interface TimeLeft {
-  days: number;
   hours: number;
   minutes: number;
   seconds: number;
@@ -15,13 +15,11 @@ interface TimeLeft {
 
 type Phase = "waiting" | "running" | "ended";
 
-const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) => {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: CountdownTimerProps) => {
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>({ hours: 0, minutes: 0, seconds: 0 });
   const [phase, setPhase] = useState<Phase>("waiting");
   const [progress, setProgress] = useState(0);
-  const [tickKey, setTickKey] = useState(0);
   const [isLastTenMinutes, setIsLastTenMinutes] = useState(false);
-  const prevSeconds = useRef(-1);
 
   const calculateTime = useCallback(() => {
     const now = new Date().getTime();
@@ -34,8 +32,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
       setProgress(0);
       setIsLastTenMinutes(false);
       return {
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        hours: Math.floor(diff / (1000 * 60 * 60)),
         minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((diff % (1000 * 60)) / 1000),
       };
@@ -45,7 +42,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
       setPhase("ended");
       setProgress(100);
       setIsLastTenMinutes(false);
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+      return { hours: 0, minutes: 0, seconds: 0 };
     }
 
     const diff = end - now;
@@ -56,116 +53,105 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
     setIsLastTenMinutes(diff <= 10 * 60 * 1000);
 
     return {
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+      hours: Math.floor(diff / (1000 * 60 * 60)),
       minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
       seconds: Math.floor((diff % (1000 * 60)) / 1000),
     };
   }, [startTime, endTime]);
 
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
+
     const update = () => {
       const newTime = calculateTime();
-      if (newTime.seconds !== prevSeconds.current) {
-        setTickKey((k) => k + 1);
-        prevSeconds.current = newTime.seconds;
-      }
       setTimeLeft(newTime);
     };
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [calculateTime]);
+  }, [calculateTime, isPaused]);
 
   const pad = (n: number) => String(n).padStart(2, "0");
 
   const phaseLabel =
-    phase === "waiting"
-      ? "⏳ Starts in"
-      : phase === "running"
-      ? isLastTenMinutes
-        ? "🔴 Final Minutes!"
-        : "🔥 Hackathon Ends In"
-      : "🎉 Hackathon Ended!";
+    isPaused
+      ? "Countdown Paused"
+      : phase === "waiting"
+        ? "Starts in"
+        : phase === "running"
+          ? isLastTenMinutes
+            ? "Final 10 Minutes"
+            : "Time Remaining"
+          : "Event Complete";
 
   const digits = [
-    { value: pad(timeLeft.days), label: "Days" },
     { value: pad(timeLeft.hours), label: "Hours" },
     { value: pad(timeLeft.minutes), label: "Minutes" },
     { value: pad(timeLeft.seconds), label: "Seconds" },
   ];
 
   return (
-    <div className={`flex flex-col items-center gap-8 animate-scale-in ${isLastTenMinutes ? "breathing" : ""}`}>
+    <div className={`flex flex-col items-center gap-6 sm:gap-8 ${phase === "running" && !isPaused ? "heartbeat" : ""}`}>
       {/* Phase Label */}
-      <p className={`text-lg sm:text-xl font-semibold tracking-wide uppercase ${isLastTenMinutes ? "text-destructive" : "text-primary"} animate-fade-in-down`}>
+      <p className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-[0.2em] uppercase ${isLastTenMinutes ? "text-destructive" : "text-primary"} mb-4`}>
         {phaseLabel}
       </p>
 
       {/* Countdown Digits */}
       {phase !== "ended" ? (
-        <div className="flex gap-3 sm:gap-5">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-6xl">
           {digits.map((d, i) => (
             <div
               key={i}
-              className={`countdown-digit w-[72px] h-[90px] sm:w-[100px] sm:h-[120px] md:w-[130px] md:h-[150px] animate-fade-in-up opacity-0 transition-transform duration-200 hover:scale-105 ${isLastTenMinutes ? "" : ""}`}
-              style={{ animationDelay: `${i * 0.1}s` }}
+              className="countdown-digit w-[clamp(4.75rem,18vw,11.25rem)] h-[clamp(6rem,23vw,13.75rem)] sm:w-[clamp(5.5rem,16vw,11.25rem)] sm:h-[clamp(7rem,22vw,13.75rem)] md:w-[clamp(6.5rem,14vw,11.5rem)] md:h-[clamp(8.5rem,18vw,14rem)]"
             >
               <span
-                key={`${i}-${tickKey}`}
-                className={`text-3xl sm:text-5xl md:text-6xl font-bold glow-text font-mono animate-digit-tick ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
+                className={`text-[clamp(1.9rem,6vw,4.6rem)] sm:text-[clamp(2.4rem,5vw,4.8rem)] md:text-[clamp(3rem,4.5vw,5.4rem)] lg:text-[clamp(3.4rem,4vw,6rem)] font-bold font-mono ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
               >
                 {d.value}
               </span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest mt-1">
+              <span className="text-[clamp(0.55rem,1.6vw,1rem)] sm:text-[clamp(0.6rem,1.3vw,1rem)] md:text-[clamp(0.72rem,1.1vw,1.05rem)] lg:text-[clamp(0.8rem,1vw,1.1rem)] text-muted-foreground uppercase tracking-widest mt-2 md:mt-4">
                 {d.label}
               </span>
             </div>
           ))}
         </div>
       ) : (
-        <div className="text-center space-y-4 animate-scale-in">
-          <p className="text-2xl sm:text-4xl font-bold text-primary glow-text">
+        <div className="text-center space-y-4">
+          <p className="text-2xl sm:text-4xl font-bold text-primary">
             Time's Up!
           </p>
           <p className="text-muted-foreground">
-            Hope you built something amazing! 🚀
+            Event Complete
           </p>
         </div>
       )}
 
       {/* Progress Bar */}
       {phase === "running" && (
-        <div className="w-full max-w-md space-y-2 animate-fade-in opacity-0 [animation-delay:0.5s]">
-          <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="w-full max-w-lg md:max-w-3xl lg:max-w-5xl space-y-3 mt-8">
+          <div className="flex justify-between text-xs sm:text-sm md:text-base text-muted-foreground uppercase tracking-wider font-semibold">
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-2.5 bg-secondary rounded-full overflow-hidden">
+          <div className="h-3 sm:h-4 md:h-5 bg-secondary rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-linear relative overflow-hidden"
+              className="h-full rounded-full transition-all duration-1000 ease-linear"
               style={{
                 width: `${progress}%`,
                 background: isLastTenMinutes
-                  ? `linear-gradient(90deg, hsl(0 84% 60%), hsl(38 95% 55%))`
-                  : `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--countdown-accent)))`,
+                  ? `hsl(0 84% 60%)`
+                  : `hsl(var(--primary))`,
               }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer bg-[length:200%_100%]" />
-            </div>
+            />
           </div>
         </div>
       )}
-
-      {/* Reset Button */}
-      <button
-        onClick={onReset}
-        className="mt-4 px-6 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-muted transition-all duration-300 text-sm hover:scale-105 active:scale-95 animate-fade-in opacity-0 [animation-delay:0.6s]"
-      >
-        Reset Timer
-      </button>
     </div>
   );
 };
 
 export default CountdownTimer;
+
