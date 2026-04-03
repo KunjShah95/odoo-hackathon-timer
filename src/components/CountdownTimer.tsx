@@ -84,7 +84,7 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
           ? isLastTenMinutes
             ? "Final 10 Minutes"
             : "Time Remaining"
-          : "Event Complete";
+          : "Website remains open";
 
   const digits = [
     { value: pad(timeLeft.hours), label: "Hours" },
@@ -100,34 +100,34 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
       </p>
 
       {/* Countdown Digits */}
-      {phase !== "ended" ? (
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-6xl">
-          {digits.map((d, i) => (
-            <div
-              key={i}
-              className="countdown-digit w-[clamp(4.75rem,18vw,11.25rem)] h-[clamp(6rem,23vw,13.75rem)] sm:w-[clamp(5.5rem,16vw,11.25rem)] sm:h-[clamp(7rem,22vw,13.75rem)] md:w-[clamp(6.5rem,14vw,11.5rem)] md:h-[clamp(8.5rem,18vw,14rem)]"
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-6xl">
+        {digits.map((d, i) => (
+          <div
+            key={i}
+            className="countdown-digit w-[clamp(4.75rem,18vw,11.25rem)] h-[clamp(6rem,23vw,13.75rem)] sm:w-[clamp(5.5rem,16vw,11.25rem)] sm:h-[clamp(7rem,22vw,13.75rem)] md:w-[clamp(6.5rem,14vw,11.5rem)] md:h-[clamp(8.5rem,18vw,14rem)]"
+          >
+            <span
+              className={`text-[clamp(1.9rem,6vw,4.6rem)] sm:text-[clamp(2.4rem,5vw,4.8rem)] md:text-[clamp(3rem,4.5vw,5.4rem)] lg:text-[clamp(3.4rem,4vw,6rem)] font-bold font-mono ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
             >
-              <span
-                className={`text-[clamp(1.9rem,6vw,4.6rem)] sm:text-[clamp(2.4rem,5vw,4.8rem)] md:text-[clamp(3rem,4.5vw,5.4rem)] lg:text-[clamp(3.4rem,4vw,6rem)] font-bold font-mono ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
-              >
-                {d.value}
-              </span>
-              <span className="text-[clamp(0.55rem,1.6vw,1rem)] sm:text-[clamp(0.6rem,1.3vw,1rem)] md:text-[clamp(0.72rem,1.1vw,1.05rem)] lg:text-[clamp(0.8rem,1vw,1.1rem)] text-muted-foreground uppercase tracking-widest mt-2 md:mt-4">
-                {d.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center space-y-4">
-          <p className="text-2xl sm:text-4xl font-bold text-primary">
-            Time's Up!
+              {d.value}
+            </span>
+            <span className="text-[clamp(0.55rem,1.6vw,1rem)] sm:text-[clamp(0.6rem,1.3vw,1rem)] md:text-[clamp(0.72rem,1.1vw,1.05rem)] lg:text-[clamp(0.8rem,1vw,1.1rem)] text-muted-foreground uppercase tracking-widest mt-2 md:mt-4">
+              {d.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {phase === "ended" ? (
+        <div className="text-center space-y-2">
+          <p className="text-xl sm:text-3xl font-bold text-primary">
+            Hackathon ended
           </p>
-          <p className="text-muted-foreground">
-            Event Complete
+          <p className="text-sm sm:text-base text-muted-foreground uppercase tracking-[0.25em]">
+            Website remains open
           </p>
         </div>
-      )}
+      ) : null}
 
       {/* Progress Bar */}
       {phase === "running" && (
