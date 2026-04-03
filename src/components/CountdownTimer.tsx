@@ -20,6 +20,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
   const [phase, setPhase] = useState<Phase>("waiting");
   const [progress, setProgress] = useState(0);
   const [tickKey, setTickKey] = useState(0);
+  const [isLastTenMinutes, setIsLastTenMinutes] = useState(false);
   const prevSeconds = useRef(-1);
 
   const calculateTime = useCallback(() => {
@@ -31,6 +32,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
       const diff = start - now;
       setPhase("waiting");
       setProgress(0);
+      setIsLastTenMinutes(false);
       return {
         days: Math.floor(diff / (1000 * 60 * 60 * 24)),
         hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -42,6 +44,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
     if (now >= end) {
       setPhase("ended");
       setProgress(100);
+      setIsLastTenMinutes(false);
       return { days: 0, hours: 0, minutes: 0, seconds: 0 };
     }
 
@@ -50,6 +53,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
     const elapsed = now - start;
     setPhase("running");
     setProgress(Math.min((elapsed / total) * 100, 100));
+    setIsLastTenMinutes(diff <= 10 * 60 * 1000);
 
     return {
       days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -79,15 +83,10 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
     phase === "waiting"
       ? "⏳ Starts in"
       : phase === "running"
-      ? "🔥 Hackathon Ends In"
+      ? isLastTenMinutes
+        ? "🔴 Final Minutes!"
+        : "🔥 Hackathon Ends In"
       : "🎉 Hackathon Ended!";
-
-  const phaseColor =
-    phase === "waiting"
-      ? "text-accent"
-      : phase === "running"
-      ? "text-primary"
-      : "text-accent";
 
   const digits = [
     { value: pad(timeLeft.days), label: "Days" },
@@ -97,9 +96,9 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
   ];
 
   return (
-    <div className="flex flex-col items-center gap-8 animate-scale-in">
+    <div className={`flex flex-col items-center gap-8 animate-scale-in ${isLastTenMinutes ? "breathing" : ""}`}>
       {/* Phase Label */}
-      <p className={`text-lg sm:text-xl font-semibold tracking-wide uppercase ${phaseColor} animate-fade-in-down`}>
+      <p className={`text-lg sm:text-xl font-semibold tracking-wide uppercase ${isLastTenMinutes ? "text-destructive" : "text-primary"} animate-fade-in-down`}>
         {phaseLabel}
       </p>
 
@@ -109,12 +108,12 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
           {digits.map((d, i) => (
             <div
               key={i}
-              className="countdown-digit w-[72px] h-[90px] sm:w-[100px] sm:h-[120px] md:w-[130px] md:h-[150px] animate-fade-in-up opacity-0 transition-transform duration-200 hover:scale-105"
+              className={`countdown-digit w-[72px] h-[90px] sm:w-[100px] sm:h-[120px] md:w-[130px] md:h-[150px] animate-fade-in-up opacity-0 transition-transform duration-200 hover:scale-105 ${isLastTenMinutes ? "" : ""}`}
               style={{ animationDelay: `${i * 0.1}s` }}
             >
               <span
                 key={`${i}-${tickKey}`}
-                className="text-3xl sm:text-5xl md:text-6xl font-bold text-primary glow-text font-mono animate-digit-tick"
+                className={`text-3xl sm:text-5xl md:text-6xl font-bold glow-text font-mono animate-digit-tick ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
               >
                 {d.value}
               </span>
@@ -147,7 +146,9 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
               className="h-full rounded-full transition-all duration-1000 ease-linear relative overflow-hidden"
               style={{
                 width: `${progress}%`,
-                background: `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))`,
+                background: isLastTenMinutes
+                  ? `linear-gradient(90deg, hsl(0 84% 60%), hsl(38 95% 55%))`
+                  : `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--countdown-accent)))`,
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer bg-[length:200%_100%]" />
