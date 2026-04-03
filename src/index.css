@@ -4,47 +4,47 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 220 20% 15%;
+    --background: 250 30% 8%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 20% 15%;
+    --card: 250 25% 14%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 20% 15%;
+    --popover: 250 25% 14%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 262 83% 58%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 95% 55%;
+    --primary-foreground: 250 30% 8%;
 
-    --secondary: 220 14% 92%;
-    --secondary-foreground: 220 20% 15%;
+    --secondary: 250 20% 18%;
+    --secondary-foreground: 0 0% 90%;
 
-    --muted: 220 14% 94%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 250 15% 20%;
+    --muted-foreground: 250 10% 60%;
 
-    --accent: 174 72% 40%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 38 95% 55%;
+    --accent-foreground: 250 30% 8%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 87%;
-    --input: 220 13% 87%;
-    --ring: 262 83% 58%;
+    --border: 250 15% 22%;
+    --input: 250 15% 22%;
+    --ring: 38 95% 55%;
 
     --radius: 0.75rem;
 
-    --countdown-glow: 262 83% 58%;
-    --countdown-accent: 174 72% 40%;
+    --countdown-glow: 38 95% 55%;
+    --countdown-accent: 270 60% 50%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 20% 15%;
-    --sidebar-primary: 262 83% 58%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 14% 92%;
-    --sidebar-accent-foreground: 220 20% 15%;
-    --sidebar-border: 220 13% 87%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-background: 250 25% 14%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 38 95% 55%;
+    --sidebar-primary-foreground: 250 30% 8%;
+    --sidebar-accent: 250 20% 18%;
+    --sidebar-accent-foreground: 0 0% 90%;
+    --sidebar-border: 250 15% 22%;
+    --sidebar-ring: 38 95% 55%;
   }
 }
 
@@ -62,17 +62,36 @@
 @layer components {
   .countdown-digit {
     @apply bg-card border border-border rounded-lg flex flex-col items-center justify-center;
-    box-shadow: 0 0 30px hsl(var(--countdown-glow) / 0.12),
-                0 0 60px hsl(var(--countdown-glow) / 0.04);
+    box-shadow: 0 0 30px hsl(var(--countdown-glow) / 0.15),
+                0 0 60px hsl(var(--countdown-glow) / 0.06);
   }
 
   .glow-text {
-    text-shadow: 0 0 20px hsl(var(--countdown-glow) / 0.4),
-                 0 0 40px hsl(var(--countdown-glow) / 0.2);
+    text-shadow: 0 0 20px hsl(var(--countdown-glow) / 0.5),
+                 0 0 40px hsl(var(--countdown-glow) / 0.25);
   }
 
   .pulse-dot {
     animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Breathing animation for last 10 minutes */
+  .breathing {
+    animation: breathing 2s ease-in-out infinite;
+  }
+
+  .breathing .countdown-digit {
+    animation: breathing-glow 2s ease-in-out infinite;
+  }
+
+  /* Bubble styles */
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, hsl(var(--primary) / 0.15), hsl(var(--countdown-accent) / 0.08));
+    border: 1px solid hsl(var(--primary) / 0.1);
+    animation: bubble-rise linear infinite;
+    pointer-events: none;
   }
 }
 
@@ -88,4 +107,37 @@
 
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@keyframes breathing {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+@keyframes breathing-glow {
+  0%, 100% {
+    box-shadow: 0 0 30px hsl(0 84% 60% / 0.2), 0 0 60px hsl(0 84% 60% / 0.1);
+    border-color: hsl(0 84% 60% / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 50px hsl(0 84% 60% / 0.4), 0 0 100px hsl(0 84% 60% / 0.2);
+    border-color: hsl(0 84% 60% / 0.7);
+  }
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(100vh) scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
 }
