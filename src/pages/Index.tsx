@@ -11,19 +11,27 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Logos Header */}
       <div className="absolute top-6 left-8 right-8 flex items-center justify-between z-20">
-        <img src={indusLogo} alt="Indus University" className="h-16 sm:h-20 object-contain" />
-        <img src={odooLogo} alt="Odoo" className="h-10 sm:h-14 object-contain" />
+        <img
+          src={indusLogo}
+          alt="Indus University"
+          className="h-16 sm:h-20 object-contain animate-slide-in-left"
+        />
+        <img
+          src={odooLogo}
+          alt="Odoo"
+          className="h-10 sm:h-14 object-contain animate-slide-in-right"
+        />
       </div>
 
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-float [animation-delay:1.5s]" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-8 w-full mt-16">
         {/* Header */}
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-3 animate-fade-in-down">
           <div className="flex items-center justify-center gap-2 mb-2">
             <span className="pulse-dot inline-block w-2 h-2 rounded-full bg-accent" />
             <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-medium">
@@ -55,7 +63,7 @@ const Index = () => {
         )}
 
         {/* Organised by */}
-        <p className="text-sm text-muted-foreground mt-4">
+        <p className="text-sm text-muted-foreground mt-4 animate-fade-in [animation-delay:0.8s] opacity-0">
           Organised by the <span className="font-semibold text-foreground">CSE Department</span>
         </p>
       </div>

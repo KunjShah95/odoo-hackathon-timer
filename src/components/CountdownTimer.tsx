@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 interface CountdownTimerProps {
   startTime: Date;
@@ -19,6 +19,8 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [phase, setPhase] = useState<Phase>("waiting");
   const [progress, setProgress] = useState(0);
+  const [tickKey, setTickKey] = useState(0);
+  const prevSeconds = useRef(-1);
 
   const calculateTime = useCallback(() => {
     const now = new Date().getTime();
@@ -58,10 +60,16 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
   }, [startTime, endTime]);
 
   useEffect(() => {
-    setTimeLeft(calculateTime());
-    const interval = setInterval(() => {
-      setTimeLeft(calculateTime());
-    }, 1000);
+    const update = () => {
+      const newTime = calculateTime();
+      if (newTime.seconds !== prevSeconds.current) {
+        setTickKey((k) => k + 1);
+        prevSeconds.current = newTime.seconds;
+      }
+      setTimeLeft(newTime);
+    };
+    update();
+    const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
   }, [calculateTime]);
 
@@ -89,9 +97,9 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
   ];
 
   return (
-    <div className="flex flex-col items-center gap-8 animate-fade-in-up">
+    <div className="flex flex-col items-center gap-8 animate-scale-in">
       {/* Phase Label */}
-      <p className={`text-lg sm:text-xl font-semibold tracking-wide uppercase ${phaseColor}`}>
+      <p className={`text-lg sm:text-xl font-semibold tracking-wide uppercase ${phaseColor} animate-fade-in-down`}>
         {phaseLabel}
       </p>
 
@@ -99,8 +107,15 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
       {phase !== "ended" ? (
         <div className="flex gap-3 sm:gap-5">
           {digits.map((d, i) => (
-            <div key={i} className="countdown-digit w-[72px] h-[90px] sm:w-[100px] sm:h-[120px] md:w-[130px] md:h-[150px]">
-              <span className="text-3xl sm:text-5xl md:text-6xl font-bold text-primary glow-text font-mono">
+            <div
+              key={i}
+              className="countdown-digit w-[72px] h-[90px] sm:w-[100px] sm:h-[120px] md:w-[130px] md:h-[150px] animate-fade-in-up opacity-0 transition-transform duration-200 hover:scale-105"
+              style={{ animationDelay: `${i * 0.1}s` }}
+            >
+              <span
+                key={`${i}-${tickKey}`}
+                className="text-3xl sm:text-5xl md:text-6xl font-bold text-primary glow-text font-mono animate-digit-tick"
+              >
                 {d.value}
               </span>
               <span className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest mt-1">
@@ -110,7 +125,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
           ))}
         </div>
       ) : (
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 animate-scale-in">
           <p className="text-2xl sm:text-4xl font-bold text-primary glow-text">
             Time's Up!
           </p>
@@ -122,16 +137,21 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
 
       {/* Progress Bar */}
       {phase === "running" && (
-        <div className="w-full max-w-md space-y-2">
+        <div className="w-full max-w-md space-y-2 animate-fade-in opacity-0 [animation-delay:0.5s]">
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="h-2 bg-secondary rounded-full overflow-hidden">
+          <div className="h-2.5 bg-secondary rounded-full overflow-hidden">
             <div
-              className="h-full bg-primary rounded-full transition-all duration-1000 ease-linear"
-              style={{ width: `${progress}%` }}
-            />
+              className="h-full rounded-full transition-all duration-1000 ease-linear relative overflow-hidden"
+              style={{
+                width: `${progress}%`,
+                background: `linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)))`,
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer bg-[length:200%_100%]" />
+            </div>
           </div>
         </div>
       )}
@@ -139,7 +159,7 @@ const CountdownTimer = ({ startTime, endTime, onReset }: CountdownTimerProps) =>
       {/* Reset Button */}
       <button
         onClick={onReset}
-        className="mt-4 px-6 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-muted transition-colors text-sm"
+        className="mt-4 px-6 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-muted transition-all duration-300 text-sm hover:scale-105 active:scale-95 animate-fade-in opacity-0 [animation-delay:0.6s]"
       >
         Reset Timer
       </button>
