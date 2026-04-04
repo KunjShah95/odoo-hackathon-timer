@@ -5,6 +5,7 @@ interface CountdownTimerProps {
   endTime: Date;
   onReset?: () => void;
   isPaused?: boolean;
+  countUpAfterEnd?: boolean;
 }
 
 interface TimeLeft {
@@ -13,9 +14,9 @@ interface TimeLeft {
   seconds: number;
 }
 
-type Phase = "waiting" | "running" | "ended";
+type Phase = "waiting" | "running" | "ended" | "countup";
 
-const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: CountdownTimerProps) => {
+const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false, countUpAfterEnd = false }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({ hours: 0, minutes: 0, seconds: 0 });
   const [phase, setPhase] = useState<Phase>("waiting");
   const [progress, setProgress] = useState(0);
@@ -39,6 +40,18 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
     }
 
     if (now >= end) {
+      if (countUpAfterEnd) {
+        const diff = now - end;
+        setPhase("countup");
+        setProgress(100);
+        setIsLastTenMinutes(false);
+        return {
+          hours: Math.floor(diff / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        };
+      }
+
       setPhase("ended");
       setProgress(100);
       setIsLastTenMinutes(false);
@@ -84,7 +97,9 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
           ? isLastTenMinutes
             ? "Final 10 Minutes"
             : "Time Remaining"
-          : "Website remains open";
+          : phase === "countup"
+            ? "Hackathon Coding Time Completed"
+            : "Website remains open";
 
   const digits = [
     { value: pad(timeLeft.hours), label: "Hours" },
@@ -125,6 +140,15 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
           </p>
           <p className="text-sm sm:text-base text-muted-foreground uppercase tracking-[0.25em]">
             Website remains open
+          </p>
+        </div>
+      ) : phase === "countup" ? (
+        <div className="text-center space-y-2">
+          <p className="text-xl sm:text-3xl font-bold text-primary">
+            Hackathon coding time completed
+          </p>
+          <p className="text-sm sm:text-base text-muted-foreground uppercase tracking-[0.25em]">
+            Timer running from 0 onward
           </p>
         </div>
       ) : null}

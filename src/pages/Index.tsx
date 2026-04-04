@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CountdownTimer from "@/components/CountdownTimer";
 import indusLogo from "@/assets/indus-logo.png";
 import odooLogo from "@/assets/odoo-logo.png";
@@ -8,16 +8,6 @@ const Index = () => {
     return {
       start: new Date(2026, 3, 4, 10, 0, 0),
       end: new Date(2026, 3, 5, 10, 0, 0),
-    };
-  }, []);
-
-  const startButtonWindow = useMemo(() => {
-    const opensAt = new Date(2026, 3, 4, 9, 55, 0).getTime();
-    const closesAt = new Date(2026, 3, 4, 10, 5, 0).getTime();
-
-    return {
-      opensAt,
-      closesAt,
     };
   }, []);
 
@@ -35,21 +25,32 @@ const Index = () => {
     return () => window.clearInterval(interval);
   }, []);
 
-  const isWithinStartButtonWindow =
-    now >= startButtonWindow.opensAt && now <= startButtonWindow.closesAt;
-  const showStartButton = true;
-  const isStartButtonActive = isWithinStartButtonWindow;
-  const shouldShowPauseControls = isStarted;
+  useEffect(() => {
+    if (isStarted) {
+      return;
+    }
 
-  const handleStartClick = () => {
+    const timeoutMs = Math.max(0, eventTimes.start.getTime() - now);
+    const timeoutId = window.setTimeout(() => {
+      if (!isStarted) {
+        handleStartClick();
+      }
+    }, timeoutMs);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [eventTimes.start, isStarted, now]);
+
+  const isStartButtonActive = now >= eventTimes.start.getTime();
+
+  const handleStartClick = useCallback(() => {
     const start = new Date();
-    const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+    const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
 
     setIsStarted(true);
     setIsPaused(false);
     setCountdownStartTime(start);
     setCountdownEndTime(end);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 flex items-center justify-center relative overflow-hidden">
@@ -93,21 +94,14 @@ const Index = () => {
             </div>
 
             <div className="mt-6 space-y-6 sm:mt-8 sm:space-y-7 xl:mt-8 xl:space-y-8">
-              {isStarted && countdownStartTime && countdownEndTime ? (
-                <CountdownTimer
-                  startTime={countdownStartTime}
-                  endTime={countdownEndTime}
-                  isPaused={isPaused && shouldShowPauseControls}
-                />
-              ) : (
-                <CountdownTimer
-                  startTime={eventTimes.start}
-                  endTime={eventTimes.end}
-                  isPaused={false}
-                />
-              )}
+              <CountdownTimer
+                startTime={isStarted && countdownStartTime ? countdownStartTime : eventTimes.start}
+                endTime={isStarted && countdownEndTime ? countdownEndTime : eventTimes.end}
+                isPaused={isPaused && isStarted}
+                countUpAfterEnd
+              />
 
-              {showStartButton ? (
+              {!isStarted ? (
                 <div className="mx-auto flex max-w-xl flex-col items-center gap-5 rounded-[1.5rem] border border-white/10 bg-white/5 px-6 py-8 sm:px-10 sm:py-10">
                   <button
                     type="button"
@@ -121,11 +115,11 @@ const Index = () => {
                   >
                     {isStartButtonActive ? "Start Website" : "Available at 9:55 AM"}
                   </button>
-                  <p className="text-xs sm:text-sm uppercase tracking-[0.22em] text-white/55">
-                    
+                  <p className="text-xs sm:text-sm uppercase tracking-[0.22em] text-white/55 text-center">
+                    Auto-start begins exactly at 10:00 AM if the button is missed.
                   </p>
                 </div>
-              ) : isStarted ? (
+              ) : (
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                   <button
                     type="button"
@@ -135,7 +129,7 @@ const Index = () => {
                     {isPaused ? "Play Countdown" : "Pause Countdown"}
                   </button>
                 </div>
-              ) : null}
+              )}
             </div>
 
             <p className="mx-auto mt-6 flex w-fit items-center justify-center rounded-full border border-white/10 bg-white/8 px-5 py-2.5 text-center text-[10px] sm:px-6 sm:py-3 sm:text-sm lg:px-7 lg:py-3 lg:text-base text-white/80 uppercase tracking-[0.2em] sm:tracking-[0.24em] lg:tracking-[0.28em]">
