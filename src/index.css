@@ -72,6 +72,21 @@
   .heartbeat {
     animation: heartbeat 1.8s ease-in-out infinite;
   }
+
+  .breathing {
+    animation: breathing 3.8s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform, box-shadow;
+  }
+
+  .countdown-sheen {
+    animation: countdown-sheen 6.5s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+
+  .countdown-label-pulse {
+    animation: countdown-label-pulse 2.6s ease-in-out infinite;
+  }
 }
 
 
@@ -90,5 +105,55 @@
   40% { transform: scale(1.028); }
   60% { transform: scale(1.012); }
   80% { transform: scale(1.02); }
+}
+
+@keyframes breathing {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    transform: scale(1.008);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.11);
+  }
+}
+
+@keyframes countdown-sheen {
+  0% {
+    opacity: 0;
+    transform: translateX(-45%) skewX(-12deg);
+  }
+  18% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(135%) skewX(-12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(180%) skewX(-12deg);
+  }
+}
+
+@keyframes countdown-label-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    letter-spacing: 0.5em;
+  }
+  50% {
+    opacity: 1;
+    letter-spacing: 0.58em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathing,
+  .heartbeat,
+  .countdown-sheen,
+  .countdown-label-pulse,
+  .animate-fade-in-up {
+    animation: none !important;
+  }
 }
 

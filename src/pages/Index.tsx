@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import CountdownTimer from "@/components/CountdownTimer";
 import indusLogo from "@/assets/indus-logo.png";
 import odooLogo from "@/assets/odoo-logo.png";
@@ -57,7 +56,7 @@ const Index = () => {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(24,24,27,0.08),_transparent_38%),radial-gradient(circle_at_bottom,_rgba(24,24,27,0.05),_transparent_30%)]" />
 
       <div className="relative z-10 w-full max-w-[min(100vw-0.75rem,1200px)]">
-        <div className="mx-auto mb-4 flex h-14 max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-16 sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-20 xl:px-8">
+        <div className="breathing mx-auto mb-4 flex h-14 max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-16 sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-20 xl:px-8">
           <img
             src={odooLogo}
             alt="ODOO"
@@ -71,16 +70,12 @@ const Index = () => {
         </div>
 
         <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-[calc(100vh-8.75rem)] xl:min-h-0">
-          <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4">
-            <p className="text-[10px] sm:text-xs uppercase tracking-[0.5em] text-primary/80 font-bold">
+          <div className="breathing relative flex items-center justify-between gap-4 overflow-hidden border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4">
+            <div className="countdown-sheen pointer-events-none absolute inset-y-0 left-[-35%] w-[38%] bg-gradient-to-r from-transparent via-white/14 to-transparent blur-xl" />
+            <p className="countdown-label-pulse relative z-10 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.5em] text-primary/80 sm:text-xs">
+              <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_16px_rgba(255,191,0,0.65)]" />
               Live Countdown
             </p>
-            <Link
-              to="/results"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/80 transition hover:bg-white/10 hover:text-white"
-            >
-              Results Page
-            </Link>
           </div>
 
           <div className="px-4 py-8 text-center sm:px-6 sm:py-9 lg:px-10 lg:py-10 xl:flex xl:h-[calc(100%-3.25rem)] xl:flex-col xl:justify-between xl:py-8">
@@ -139,12 +134,6 @@ const Index = () => {
                   >
                     {isPaused ? "Play Countdown" : "Pause Countdown"}
                   </button>
-                  <Link
-                    to="/results"
-                    className="min-w-44 rounded-full bg-white px-6 py-3 text-sm sm:text-base font-semibold uppercase tracking-[0.22em] text-zinc-950 transition hover:bg-zinc-200"
-                  >
-                    Open Results Page
-                  </Link>
                 </div>
               ) : null}
             </div>

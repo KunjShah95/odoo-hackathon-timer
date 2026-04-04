@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import indusLogo from "@/assets/indus-logo.png";
 import odooLogo from "@/assets/odoo-logo.png";
 import hackathonBanner from "@/assets/hackathon-banner.jpg";
@@ -22,9 +21,9 @@ const Results = () => {
   return (
     <div className="min-h-screen bg-white px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 flex items-center justify-center">
       <div className="mx-auto max-w-[min(100vw-0.75rem,1200px)]">
-        <div className="mx-auto mb-4 flex h-14 max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:mb-4 sm:h-16 sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-20 xl:px-8">
-          <img src={odooLogo} alt="ODOO" className="h-8 w-auto object-contain scale-[1.12] origin-left sm:h-10 lg:h-12 xl:h-16" />
-          <img src={indusLogo} alt="Indus University" className="h-8 w-auto object-contain scale-[1.02] origin-right sm:h-10 lg:h-12 xl:h-16" />
+        <div className="mx-auto mb-4 flex h-[4.25rem] max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:mb-4 sm:h-[4.75rem] sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-[5.25rem] xl:px-8">
+          <img src={odooLogo} alt="ODOO" className="h-10 w-auto object-contain scale-[1.22] origin-left sm:h-12 lg:h-14 xl:h-18" />
+          <img src={indusLogo} alt="Indus University" className="h-10 w-auto object-contain scale-[1.12] origin-right sm:h-12 lg:h-14 xl:h-18" />
         </div>
 
         <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[1.5rem] bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.24)] sm:rounded-[2rem] xl:w-full xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-[calc(100vh-8.75rem)] xl:max-h-[calc(100vh-8.75rem)]">
@@ -63,14 +62,8 @@ const Results = () => {
                 ))}
               </div>
 
-              <div className="mt-4 flex flex-col gap-3 sm:mt-4 sm:flex-row">
-                <Link
-                  to="/"
-                  className="rounded-full bg-primary px-5 py-2.5 text-center text-xs sm:text-sm font-bold uppercase tracking-[0.2em] sm:tracking-[0.22em] text-black transition hover:scale-[1.02]"
-                >
-                  Back to Timer
-                </Link>
-                <p className="rounded-full border border-white/10 px-5 py-2.5 text-center text-xs sm:px-6 sm:text-sm text-white/60">
+              <div className="mt-4 sm:mt-4">
+                <p className="text-center text-xs sm:text-sm text-white/60">
                   Update these blocks later with the final photos.
                 </p>
               </div>
