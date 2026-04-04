@@ -12,7 +12,6 @@ const Index = () => {
   }, []);
 
   const [isStarted, setIsStarted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const [now, setNow] = useState(() => Date.now());
   const [countdownStartTime, setCountdownStartTime] = useState<Date | null>(null);
   const [countdownEndTime, setCountdownEndTime] = useState<Date | null>(null);
@@ -25,6 +24,7 @@ const Index = () => {
     return () => window.clearInterval(interval);
   }, []);
 
+  const startButtonAvailableAt = eventTimes.start.getTime() - 5 * 60 * 1000;
   useEffect(() => {
     if (isStarted) {
       return;
@@ -40,24 +40,23 @@ const Index = () => {
     return () => window.clearTimeout(timeoutId);
   }, [eventTimes.start, isStarted, now]);
 
-  const isStartButtonActive = now >= eventTimes.start.getTime();
+  const isStartButtonActive = now >= startButtonAvailableAt;
 
   const handleStartClick = useCallback(() => {
-    const start = new Date();
-    const end = new Date(start.getTime() + 4 * 24 * 60 * 60 * 1000);
+    const start = eventTimes.start;
+    const end = eventTimes.end;
 
     setIsStarted(true);
-    setIsPaused(false);
     setCountdownStartTime(start);
     setCountdownEndTime(end);
-  }, []);
+  }, [eventTimes.end, eventTimes.start]);
 
   return (
     <div className="min-h-screen bg-white px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 flex items-center justify-center relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(24,24,27,0.08),_transparent_38%),radial-gradient(circle_at_bottom,_rgba(24,24,27,0.05),_transparent_30%)]" />
 
       <div className="relative z-10 w-full max-w-[min(100vw-0.75rem,1200px)]">
-        <div className="breathing mx-auto mb-4 flex h-14 max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-16 sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-20 xl:px-8">
+        <div className="breathing mx-auto mb-4 flex h-14 w-full max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-16 sm:gap-5 sm:px-6 xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-20 xl:px-8">
           <img
             src={odooLogo}
             alt="ODOO"
@@ -70,7 +69,7 @@ const Index = () => {
           />
         </div>
 
-        <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-[calc(100vh-8.75rem)] xl:min-h-0">
+        <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] xl:flex xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-[calc(100vh-8.75rem)] xl:min-h-0 xl:flex-col">
           <div className="breathing relative flex items-center justify-between gap-4 overflow-hidden border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4">
             <div className="countdown-sheen pointer-events-none absolute inset-y-0 left-[-35%] w-[38%] bg-gradient-to-r from-transparent via-white/14 to-transparent blur-xl" />
             <p className="countdown-label-pulse relative z-10 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.5em] text-primary/80 sm:text-xs">
@@ -79,7 +78,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="px-4 py-8 text-center sm:px-6 sm:py-9 lg:px-10 lg:py-10 xl:flex xl:h-[calc(100%-3.25rem)] xl:flex-col xl:justify-between xl:py-8">
+          <div className="px-4 py-8 text-center sm:px-6 sm:py-9 lg:px-10 lg:py-10 xl:flex xl:flex-1 xl:flex-col xl:justify-between xl:py-6">
             <div className="space-y-3 sm:space-y-4 animate-fade-in-down">
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-[3.7rem] font-black tracking-tight leading-none">
@@ -97,7 +96,6 @@ const Index = () => {
               <CountdownTimer
                 startTime={isStarted && countdownStartTime ? countdownStartTime : eventTimes.start}
                 endTime={isStarted && countdownEndTime ? countdownEndTime : eventTimes.end}
-                isPaused={isPaused && isStarted}
                 countUpAfterEnd
               />
 
@@ -120,15 +118,7 @@ const Index = () => {
                   </p>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsPaused((value) => !value)}
-                    className="min-w-44 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm sm:text-base font-semibold uppercase tracking-[0.22em] text-white transition hover:bg-white/10"
-                  >
-                    {isPaused ? "Play Countdown" : "Pause Countdown"}
-                  </button>
-                </div>
+                <div className="flex flex-col items-center justify-center gap-3 sm:gap-4" />
               )}
             </div>
 
