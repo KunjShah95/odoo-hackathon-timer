@@ -93,25 +93,25 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
   ];
 
   return (
-    <div className={`flex flex-col items-center gap-6 sm:gap-8 ${phase === "running" && !isPaused ? "heartbeat" : ""}`}>
+    <div className={`flex flex-col items-center gap-4 sm:gap-5 lg:gap-6 ${phase === "running" && !isPaused ? "heartbeat" : ""}`}>
       {/* Phase Label */}
-      <p className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-extrabold tracking-[0.2em] uppercase ${isLastTenMinutes ? "text-destructive" : "text-primary"} mb-4`}>
+      <p className={`text-base sm:text-lg md:text-xl lg:text-2xl font-extrabold tracking-[0.2em] uppercase ${isLastTenMinutes ? "text-destructive" : "text-primary"} mb-2`}>
         {phaseLabel}
       </p>
 
       {/* Countdown Digits */}
-      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-6xl">
+      <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 max-w-6xl">
         {digits.map((d, i) => (
           <div
             key={i}
-            className="countdown-digit w-[clamp(4.75rem,18vw,11.25rem)] h-[clamp(6rem,23vw,13.75rem)] sm:w-[clamp(5.5rem,16vw,11.25rem)] sm:h-[clamp(7rem,22vw,13.75rem)] md:w-[clamp(6.5rem,14vw,11.5rem)] md:h-[clamp(8.5rem,18vw,14rem)]"
+            className="countdown-digit w-[clamp(4.25rem,16vw,10rem)] h-[clamp(5.5rem,21vw,12rem)] sm:w-[clamp(4.75rem,14vw,10rem)] sm:h-[clamp(6.25rem,18vw,12rem)] md:w-[clamp(5.75rem,12vw,10.25rem)] md:h-[clamp(7.5rem,16vw,12.5rem)]"
           >
             <span
-              className={`text-[clamp(1.9rem,6vw,4.6rem)] sm:text-[clamp(2.4rem,5vw,4.8rem)] md:text-[clamp(3rem,4.5vw,5.4rem)] lg:text-[clamp(3.4rem,4vw,6rem)] font-bold font-mono ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
+              className={`text-[clamp(1.75rem,5.5vw,4.1rem)] sm:text-[clamp(2rem,4.8vw,4.2rem)] md:text-[clamp(2.5rem,4vw,4.6rem)] lg:text-[clamp(2.8rem,3.6vw,5rem)] font-bold font-mono ${isLastTenMinutes ? "text-destructive" : "text-primary"}`}
             >
               {d.value}
             </span>
-            <span className="text-[clamp(0.55rem,1.6vw,1rem)] sm:text-[clamp(0.6rem,1.3vw,1rem)] md:text-[clamp(0.72rem,1.1vw,1.05rem)] lg:text-[clamp(0.8rem,1vw,1.1rem)] text-muted-foreground uppercase tracking-widest mt-2 md:mt-4">
+            <span className="text-[clamp(0.5rem,1.4vw,0.95rem)] sm:text-[clamp(0.58rem,1.15vw,0.95rem)] md:text-[clamp(0.68rem,1vw,1rem)] lg:text-[clamp(0.75rem,0.9vw,1rem)] text-muted-foreground uppercase tracking-widest mt-2 md:mt-3">
               {d.label}
             </span>
           </div>
@@ -131,7 +131,7 @@ const CountdownTimer = ({ startTime, endTime, onReset, isPaused = false }: Count
 
       {/* Progress Bar */}
       {phase === "running" && (
-        <div className="w-full max-w-lg md:max-w-3xl lg:max-w-5xl space-y-3 mt-8">
+        <div className="w-full max-w-lg md:max-w-3xl lg:max-w-5xl space-y-3 mt-6">
           <div className="flex justify-between text-xs sm:text-sm md:text-base text-muted-foreground uppercase tracking-wider font-semibold">
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>

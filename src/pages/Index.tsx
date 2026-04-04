@@ -53,51 +53,51 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white px-4 py-6 sm:px-6 lg:px-8 flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen bg-white px-3 py-3 sm:px-4 sm:py-4 lg:px-6 lg:py-5 flex items-center justify-center relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(24,24,27,0.08),_transparent_38%),radial-gradient(circle_at_bottom,_rgba(24,24,27,0.05),_transparent_30%)]" />
 
-      <div className="relative z-10 w-full max-w-7xl xl:max-w-[min(100vw-1.5rem,1280px)]">
-        <div className="mx-auto mb-5 flex h-16 max-w-5xl items-center justify-between gap-4 rounded-full border border-zinc-200 bg-white/95 px-5 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-20 sm:gap-6 sm:px-7 lg:max-w-6xl xl:max-w-[min(100%,1280px)] xl:h-24 xl:px-10">
+      <div className="relative z-10 w-full max-w-[min(100vw-0.75rem,1200px)]">
+        <div className="mx-auto mb-4 flex h-14 max-w-5xl items-center justify-between gap-3 rounded-full border border-zinc-200 bg-white/95 px-4 shadow-[0_12px_34px_rgba(0,0,0,0.08)] backdrop-blur-sm sm:h-16 sm:gap-5 sm:px-6 lg:max-w-6xl xl:h-20 xl:px-8">
           <img
             src={odooLogo}
             alt="ODOO"
-            className="h-10 w-auto object-contain scale-[1.2] origin-left sm:h-12 lg:h-16 xl:h-20"
+            className="h-8 w-auto object-contain scale-[1.12] origin-left sm:h-10 lg:h-12 xl:h-16"
           />
           <img
             src={indusLogo}
             alt="Indus University"
-            className="h-10 w-auto object-contain scale-[1.04] origin-right sm:h-12 lg:h-16 xl:h-20"
+            className="h-8 w-auto object-contain scale-[1.02] origin-right sm:h-10 lg:h-12 xl:h-16"
           />
         </div>
 
-        <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[2rem] border border-zinc-800 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] xl:max-w-[min(100vw-1.5rem,1280px)] xl:min-h-[calc(100vh-9rem)] xl:rounded-[2rem] 2xl:min-h-[calc(100vh-9.5rem)]">
-          <div className="flex items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-8 sm:py-5">
+        <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-zinc-800 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.28)] xl:max-w-[min(100vw-0.75rem,1200px)] xl:h-[calc(100vh-8.75rem)] xl:min-h-0">
+          <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 sm:px-6 sm:py-4">
             <p className="text-[10px] sm:text-xs uppercase tracking-[0.5em] text-primary/80 font-bold">
               Live Countdown
             </p>
             <Link
               to="/results"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-white/80 transition hover:bg-white/10 hover:text-white"
+              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-white/80 transition hover:bg-white/10 hover:text-white"
             >
               Results Page
             </Link>
           </div>
 
-          <div className="px-5 py-10 text-center sm:px-8 sm:py-12 lg:px-12 lg:py-14 xl:flex xl:min-h-[calc(100vh-15rem)] xl:flex-col xl:justify-between xl:py-12">
+          <div className="px-4 py-8 text-center sm:px-6 sm:py-9 lg:px-10 lg:py-10 xl:flex xl:h-[calc(100%-3.25rem)] xl:flex-col xl:justify-between xl:py-8">
             <div className="space-y-3 sm:space-y-4 animate-fade-in-down">
 
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-none">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-[3.7rem] font-black tracking-tight leading-none">
                 <span className="text-primary glow-text">ODOO</span>
 
-                <span className="text-white/40 mx-3">×</span>
+                <span className="text-white/40 mx-2 sm:mx-3">×</span>
                 <span className="text-white">INDUS UNIVERSITY</span>
               </h1>
-              <p className="text-xl sm:text-3xl lg:text-4xl text-white/90 font-bold tracking-tight">
+              <p className="text-lg sm:text-2xl lg:text-3xl xl:text-[2.15rem] text-white/90 font-bold tracking-tight">
                 Hackathon 2026
               </p>
             </div>
 
-            <div className="mt-8 sm:mt-10 space-y-8 xl:mt-12 xl:space-y-10">
+            <div className="mt-6 space-y-6 sm:mt-8 sm:space-y-7 xl:mt-8 xl:space-y-8">
               {isStarted && countdownStartTime && countdownEndTime ? (
                 <CountdownTimer
                   startTime={countdownStartTime}
@@ -149,7 +149,7 @@ const Index = () => {
               ) : null}
             </div>
 
-            <p className="mx-auto mt-8 flex w-fit items-center justify-center rounded-full border border-white/10 bg-white/8 px-6 py-3 text-center text-sm sm:px-7 sm:text-base lg:px-8 lg:py-4 lg:text-lg text-white/80 uppercase tracking-[0.22em] sm:tracking-[0.26em] lg:tracking-[0.3em]">
+            <p className="mx-auto mt-6 flex w-fit items-center justify-center rounded-full border border-white/10 bg-white/8 px-5 py-2.5 text-center text-[10px] sm:px-6 sm:py-3 sm:text-sm lg:px-7 lg:py-3 lg:text-base text-white/80 uppercase tracking-[0.2em] sm:tracking-[0.24em] lg:tracking-[0.28em]">
               Organised by the <span className="mx-1 font-bold text-white">CSE Department</span>
             </p>
           </div>
