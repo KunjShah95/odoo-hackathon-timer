@@ -96,7 +96,6 @@ const Index = () => {
               <CountdownTimer
                 startTime={isStarted && countdownStartTime ? countdownStartTime : eventTimes.start}
                 endTime={isStarted && countdownEndTime ? countdownEndTime : eventTimes.end}
-                countUpAfterEnd
               />
 
               {!isStarted ? (
@@ -120,6 +119,7 @@ const Index = () => {
               ) : (
                 <div className="flex flex-col items-center justify-center gap-3 sm:gap-4" />
               )}
+
             </div>
 
             <p className="mx-auto mt-6 flex w-fit items-center justify-center rounded-full border border-white/10 bg-white/8 px-5 py-2.5 text-center text-[10px] sm:px-6 sm:py-3 sm:text-sm lg:px-7 lg:py-3 lg:text-base text-white/80 uppercase tracking-[0.2em] sm:tracking-[0.24em] lg:tracking-[0.28em]">
